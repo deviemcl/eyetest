@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Character</title>
+  <style>
+    /* Full-page layout and styling */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    /* Center area for the character */
+    #char-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #char {
+      user-select: none;
+    }
+    /* Bottom controls container */
+    #controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+    }
+    /* Dropdown and button styling (scaled 3x) */
+    select, button {
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      padding: 15px 30px; /* 3× the original 5px 10px */
+      font-size: 48px;    /* 3× the original 16px */
+      cursor: pointer;
+    }
+    select:focus, button:focus {
+      outline: none;
+      border-color: #888;
+    }
+    button {
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Center display for the random character -->
+  <div id="char-container">
+    <div id="char">?</div>
+  </div>
+
+  <!-- Bottom controls: size selector on left, next-size in middle, random button on right -->
+  <div id="controls">
+    <select id="size-selector">
+      <!-- Options will be populated via JavaScript -->
+    </select>
+    <button id="next-size-btn">Next Size</button>
+    <button id="random-btn">Random</button>
+  </div>
+
+  <script>
+    // Available font sizes
+    const sizes = [4, 6, 8, 10, 12, 16, 20, 24, 32, 48, 56, 72, 96, 128, 196, 256, 512, 768];
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    const charEl = document.getElementById('char');
+    const sizeSelector = document.getElementById('size-selector');
+    const randomBtn = document.getElementById('random-btn');
+    const nextSizeBtn = document.getElementById('next-size-btn');
+
+    // Populate size dropdown
+    sizes.forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.innerText = size;
+      sizeSelector.appendChild(opt);
+    });
+
+    // Set default size
+    sizeSelector.value = 96;
+    charEl.style.fontSize = sizeSelector.value + 'px';
+
+    // Function to pick a random character
+    function randomChar() {
+      const idx = Math.floor(Math.random() * chars.length);
+      charEl.textContent = chars[idx];
+    }
+
+    // Advance to next size in list (wrap around at end)
+    function nextSize() {
+      const current = Number(sizeSelector.value);
+      const idx = sizes.indexOf(current);
+      const nextIdx = (idx + 1) % sizes.length;
+      sizeSelector.value = sizes[nextIdx];
+      charEl.style.fontSize = sizeSelector.value + 'px';
+    }
+
+    // Event listeners
+    randomBtn.addEventListener('click', randomChar);
+    nextSizeBtn.addEventListener('click', nextSize);
+
+    sizeSelector.addEventListener('change', () => {
+      charEl.style.fontSize = sizeSelector.value + 'px';
+    });
+
+    // Initial character
+    randomChar();
+  </script>
+</body>
+</html>
